@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - ProfitClick</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- شاشة تسجيل الدخول للمشرف -->
+    <div class="admin-login" id="adminLogin">
+        <div class="login-box">
+            <i class="fa-solid fa-lock"></i>
+            <h2>دخول المشرف</h2>
+            <p>الرجاء إدخال كلمة المرور للوصول للوحة التحكم</p>
+            <input type="password" id="adminPass" placeholder="كلمة المرور">
+            <button onclick="checkAdminPass()">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>دخول</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- لوحة التحكم الرئيسية -->
+    <div class="admin-panel" id="adminPanel" style="display:none;">
+        <!-- الشريط الجانبي -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Profit<span>Click</span></h2>
+                <p>لوحة التحكم</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="#" onclick="showSection('dashboard')" class="active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>لوحة المعلومات</span>
+                </a>
+                <a href="#" onclick="showSection('prices')">
+                    <i class="fa-solid fa-coins"></i>
+                    <span>التحكم بالأسعار</span>
+                </a>
+                <a href="#" onclick="showSection('bitmedia')">
+                    <i class="fa-solid fa-ad"></i>
+                    <span>أكواد Bitmedia</span>
+                </a>
+                <a href="#" onclick="showSection('withdraw')">
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                    <span>إعدادات السحب</span>
+                </a>
+                <a href="#" onclick="showSection('api')">
+                    <i class="fa-solid fa-key"></i>
+                    <span>مفاتيح API</span>
+                </a>
+                <a href="#" onclick="showSection('users')">
+                    <i class="fa-solid fa-users"></i>
+                    <span>إدارة المستخدمين</span>
+                </a>
+                <a href="#" onclick="showSection('ads')">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>إعلانات المعلنين</span>
+                </a>
+                <a href="#" onclick="showSection('reports')">
+                    <i class="fa-solid fa-flag"></i>
+                    <span>التقارير</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <a href="#" onclick="logoutAdmin()">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <!-- قسم لوحة المعلومات -->
+            <div id="dashboard-section" class="content-section active">
+                <h1 class="page-title">لوحة المعلومات</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fa-solid fa-users"></i>
+                        <div class="stat-info">
+                            <h3 id="totalUsers">0</h3>
+                            <p>إجمالي المستخدمين</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <div class="stat-info">
+                            <h3 id="todayUsers">0</h3>
+                            <p>مستخدمين اليوم</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                        <div class="stat-info">
+                            <h3 id="totalEarnings">$0</h3>
+                            <p>إجمالي الأرباح</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <div class="stat-info">
+                            <h3 id="totalWithdrawals">$0</h3>
+                            <p>إجمالي السحوبات</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fa-solid fa-film"></i>
+                        <div class="stat-info">
+                            <h3 id="totalAds">0</h3>
+                            <p>مشاهدات الإعلانات</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fa-solid fa-gamepad"></i>
+                        <div class="stat-info">
+                            <h3 id="totalGames">0</h3>
+                            <p>جلسات اللعب</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>الأرباح خلال 7 أيام</h3>
+                        <canvas id="earningsChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>المستخدمين الجدد</h3>
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- قسم التحكم بالأسعار (الأهم) -->
+            <div id="prices-section" class="content-section">
+                <h1 class="page-title">💰 التحكم بالأسعار</h1>
+                <p class="section-desc">من هنا تتحكم بجميع أسعار المنصة - أي تغيير يتم حفظه فورًا</p>
+                
+                <div class="settings-grid">
+                    <!-- أسعار المشاهدات -->
+                    <div class="settings-card">
+                        <h2><i class="fa-solid fa-video"></i> أسعار مشاهدة الإعلانات</h2>
+                        
+                        <div class="setting-item">
+                            <label>💰 سعر مشاهدة إعلان الفيديو:</label>
+                            <div class="price-input">
+                                <input type="number" id="videoAdRate" step="0.001" min="0.001" max="1" value="0.009">
+                                <span>دولار</span>
+                            </div>
+                            <p class="setting-desc">المبلغ الذي يربحه المستخدم مقابل كل إعلان فيديو يشاهده</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>🔗 سعر النقر على الرابط الذكي:</label>
+                            <div class="price-input">
+                                <input type="number" id="smartLinkRate" step="0.0001" min="0.0001" max="0.1" value="0.0009">
+                                <span>دولار</span>
+                            </div>
+                            <p class="setting-desc">المبلغ لكل نقرة على رابط ذكي (مع انتظار 10 ثوانٍ)</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>🐍 سعر نقرة لعبة الدودة:</label>
+                            <div class="price-input">
+                                <input type="number" id="gameClickRate" step="0.00001" min="0.00001" max="0.01" value="0.00006">
+                                <span>دولار</span>
+                            </div>
+                            <p class="setting-desc">المبلغ لكل نقرة في لعبة الدودة (كل 1000 نقرة = 0.06$)</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>🎯 سعر إكمال المهمة:</label>
+                            <div class="price-input">
+                                <input type="number" id="taskRate" step="0.01" min="0.01" max="10" value="0.05">
+                                <span>دولار</span>
+                            </div>
+                            <p class="setting-desc">سعر إكمال المهام من المعلنين (عند إرسال الصورة)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- حدود السحب -->
+                    <div class="settings-card">
+                        <h2><i class="fa-solid fa-money-bill"></i> حدود السحب</h2>
+                        
+                        <div class="setting-item">
+                            <label>💧 أدنى سحب FaucetPay:</label>
+                            <div class="price-input">
+                                <input type="number" id="minFaucetpay" step="0.1" min="0.1" value="0.5">
+                                <span>دولار</span>
+                            </div>
+                            <p class="setting-desc">الحد الأدنى للسحب عبر محفظة FaucetPay</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>💳 أدنى سحب بطاقة فيزا:</label>
+                            <div class="price-input">
+                                <input type="number" id="minVisa" step="0.1" min="1" value="1">
+                                <span>دولار</span>
+                            </div>
+                            <p class="setting-desc">الحد الأدنى للاستبدال ببطاقة فيزا</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>💎 أدنى استبدال جواهر فري فاير:</label>
+                            <div class="price-input">
+                                <input type="number" id="minFreefire" step="10" min="10" value="110">
+                                <span>جوهرة</span>
+                            </div>
+                            <p class="setting-desc">عدد الجواهر التي يمكن استبدالها</p>
+                        </div>
+                    </div>
+                    
+                    <!-- أسعار الصرف -->
+                    <div class="settings-card">
+                        <h2><i class="fa-solid fa-exchange-alt"></i> أسعار الصرف</h2>
+                        
+                        <div class="setting-item">
+                            <label>🔄 سعر صرف بطاقة فيزا:</label>
+                            <div class="price-input">
+                                <input type="number" id="visaRate" step="0.01" min="1" value="1.10">
+                                <span>دولار = 1.10$ رصيد</span>
+                            </div>
+                            <p class="setting-desc">مثال: 1 دولار في الموقع = 1.10$ على بطاقة فيزا</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>🎮 سعر صرف جواهر فري فاير:</label>
+                            <div class="price-input">
+                                <input type="number" id="freefireRate" step="0.01" min="1" value="1.10">
+                                <span>دولار = 1.10$ رصيد</span>
+                            </div>
+                            <p class="setting-desc">مثال: 1 دولار في الموقع = 1.10$ قيمة الجواهر</p>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>💎 عدد الجواهر مقابل 1.10$:</label>
+                            <div class="price-input">
+                                <input type="number" id="freefireDiamonds" step="1" min="10" value="110">
+                                <span>جوهرة</span>
+                            </div>
+                            <p class="setting-desc">عدد الجواهر التي يحصل عليها مقابل 1.10$</p>
+                        </div>
+                    </div>
+                    
+                    <!-- إعدادات إضافية -->
+                    <div class="settings-card full-width">
+                        <h2><i class="fa-solid fa-gear"></i> إعدادات إضافية</h2>
+                        
+                        <div class="setting-row">
+                            <div class="setting-item">
+                                <label>⏱️ وقت انتظار الرابط الذكي:</label>
+                                <div class="price-input">
+                                    <input type="number" id="smartLinkTimer" min="5" max="60" value="10">
+                                    <span>ثانية</span>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>🎲 كل كم نقرة يظهر إعلان في اللعبة:</label>
+                                <div class="price-input">
+                                    <input type="number" id="gameAdInterval" min="5" max="50" value="10">
+                                    <span>نقرة</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>🔢 مكافأة الإحالة (%):</label>
+                            <div class="price-input">
+                                <input type="number" id="referralPercent" min="0" max="50" value="10">
+                                <span>%</span>
+                            </div>
+                            <p class="setting-desc">نسبة أرباح المدعو التي يحصل عليها الداعي</p>
+                        </div>
+                    </div>
+                    
+                    <button class="save-all-btn" onclick="saveAllPrices()">
+                        <i class="fa-solid fa-save"></i>
+                        حفظ جميع التغييرات
+                    </button>
+                </div>
+            </div>
+            
+            <!-- قسم أكواد Bitmedia -->
+            <div id="bitmedia-section" class="content-section">
+                <h1 class="page-title">📢 أكواد إعلانات Bitmedia</h1>
+                <p class="section-desc">ضع أكواد Bitmedia هنا لتظهر في الموقع</p>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-image"></i> كود البانر (الرئيسي)</h2>
+                    <textarea id="bannerCode" rows="5" placeholder="ضع كود banner من Bitmedia هنا"></textarea>
+                    <p class="setting-desc">يظهر في الصفحة الرئيسية أعلى المحتوى</p>
+                </div>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-video"></i> كود إعلان الفيديو</h2>
+                    <textarea id="videoAdCode" rows="5" placeholder="ضع كود إعلان الفيديو من Bitmedia هنا"></textarea>
+                    <p class="setting-desc">يظهر عند النقر على "شاهد إعلان فيديو"</p>
+                </div>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-stop"></i> كود الإعلان الإجباري (Interstitial)</h2>
+                    <textarea id="interstitialCode" rows="5" placeholder="ضع كود الإعلان البيني هنا"></textarea>
+                    <p class="setting-desc">يظهر كل 10 نقرات في لعبة الدودة</p>
+                </div>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-rectangle-ad"></i> كود إعلان المكافأة (Rewarded Video)</h2>
+                    <textarea id="rewardedCode" rows="5" placeholder="ضع كود إعلان المكافأة هنا"></textarea>
+                    <p class="setting-desc">يظهر كإعلان اختياري مع مكافأة مضاعفة</p>
+                </div>
+                
+                <button class="save-all-btn" onclick="saveAdCodes()">
+                    <i class="fa-solid fa-save"></i>
+                    حفظ أكواد الإعلانات
+                </button>
+            </div>
+            
+            <!-- قسم مفاتيح API -->
+            <div id="api-section" class="content-section">
+                <h1 class="page-title">🔑 مفاتيح API</h1>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-water"></i> FaucetPay</h2>
+                    <div class="setting-item">
+                        <label>API Key:</label>
+                        <input type="password" id="faucetpayKey" placeholder="أدخل مفتاح API من FaucetPay">
+                    </div>
+                    <div class="setting-item">
+                        <label>Merchant ID:</label>
+                        <input type="text" id="faucetpayMerchant" placeholder="أدخل Merchant ID">
+                    </div>
+                    <p class="setting-desc">للسحب التلقائي إلى محافظ المستخدمين</p>
+                </div>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-clock"></i> NOWPayments</h2>
+                    <div class="setting-item">
+                        <label>API Key:</label>
+                        <input type="password" id="nowpaymentsKey" placeholder="أدخل مفتاح API من NOWPayments">
+                    </div>
+                    <div class="setting-item">
+                        <label>IPN Secret:</label>
+                        <input type="text" id="nowpaymentsSecret" placeholder="كلمة سر IPN">
+                    </div>
+                    <p class="setting-desc">لاستقبال مدفوعات المعلنين</p>
+                </div>
+                
+                <div class="settings-card">
+                    <h2><i class="fa-solid fa-database"></i> Supabase</h2>
+                    <div class="setting-item">
+                        <label>Project URL:</label>
+                        <input type="text" id="supabaseUrl" placeholder="https://your-project.supabase.co">
+                    </div>
+                    <div class="setting-item">
+                        <label>Anon Key:</label>
+                        <input type="password" id="supabaseKey" placeholder="your-anon-key">
+                    </div>
+                </div>
+                
+                <button class="save-all-btn" onclick="saveApiKeys()">
+                    <i class="fa-solid fa-save"></i>
+                    حفظ المفاتيح
+                </button>
+            </div>
+            
+            <!-- قسم المستخدمين -->
+            <div id="users-section" class="content-section">
+                <h1 class="page-title">👥 إدارة المستخدمين</h1>
+                
+                <div class="users-toolbar">
+                    <input type="text" id="searchUser" placeholder="بحث عن مستخدم..." onkeyup="searchUsers()">
+                    <select id="userFilter" onchange="filterUsers()">
+                        <option value="all">كل المستخدمين</option>
+                        <option value="active">نشط اليوم</option>
+                        <option value="balance">أعلى رصيد</option>
+                        <option value="earned">أعلى أرباح</option>
+                    </select>
+                </div>
+                
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>الاسم</th>
+                            <th>البريد</th>
+                            <th>الرصيد</th>
+                            <th>إجمالي الأرباح</th>
+                            <th>إجمالي السحوبات</th>
+                            <th>آخر نشاط</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- تملأ ديناميكيًا -->
+                    </tbody>
+                </table>
+                
+                <div class="pagination" id="usersPagination"></div>
+            </div>
+            
+            <!-- قسم إعلانات المعلنين -->
+            <div id="ads-section" class="content-section">
+                <h1 class="page-title">📢 إعلانات المعلنين</h1>
+                
+                <div class="ads-tabs">
+                    <button class="ad-tab active" onclick="showAdTab('pending')">قيد الانتظار</button>
+                    <button class="ad-tab" onclick="showAdTab('active')">نشطة</button>
+                    <button class="ad-tab" onclick="showAdTab('completed')">منتهية</button>
+                </div>
+                
+                <div id="pendingAds" class="ad-list active">
+                    <!-- قائمة الإعلانات المنتظرة -->
+                </div>
+                
+                <div id="activeAds" class="ad-list">
+                    <!-- قائمة الإعلانات النشطة -->
+                </div>
+                
+                <div id="completedAds" class="ad-list">
+                    <!-- قائمة الإعلانات المنتهية -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- تحميل JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/admin.js"></script>
+    
+    <script>
+        const ADMIN_PASSWORD = '2009bbh2009';
+        
+        function checkAdminPass() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'flex';
+                loadAllSettings();
+                loadDashboardStats();
+                loadUsers();
+            } else {
+                alert('❌ كلمة المرور غير صحيحة');
+            }
+        }
+        
+        function showSection(section) {
+            // تحديث الأزرار
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // تحديث المحتوى
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + '-section').classList.add('active');
+        }
+        
+        async function loadAllSettings() {
+            try {
+                const response = await fetch('/api/get-settings.php');
+                const settings = await response.json();
+                
+                // تحميل الأسعار
+                document.getElementById('videoAdRate').value = settings.video_ad_rate;
+                document.getElementById('smartLinkRate').value = settings.smart_link_rate;
+                document.getElementById('gameClickRate').value = settings.game_click_rate;
+                document.getElementById('taskRate').value = settings.task_rate || 0.05;
+                
+                // حدود السحب
+                document.getElementById('minFaucetpay').value = settings.min_withdraw_faucetpay;
+                document.getElementById('minVisa').value = settings.min_withdraw_visa;
+                document.getElementById('minFreefire').value = settings.freefire_diamonds;
+                
+                // أسعار الصرف
+                document.getElementById('visaRate').value = settings.visa_exchange_rate;
+                document.getElementById('freefireRate').value = settings.freefire_exchange_rate;
+                document.getElementById('freefireDiamonds').value = settings.freefire_diamonds;
+                
+                // إعدادات إضافية
+                document.getElementById('smartLinkTimer').value = settings.smart_link_timer || 10;
+                document.getElementById('gameAdInterval').value = settings.game_ad_interval || 10;
+                document.getElementById('referralPercent').value = settings.referral_percent || 10;
+                
+                // أكواد Bitmedia
+                document.getElementById('bannerCode').value = settings.bitmedia_banner_code || '';
+                document.getElementById('videoAdCode').value = settings.bitmedia_video_code || '';
+                document.getElementById('interstitialCode').value = settings.bitmedia_interstitial_code || '';
+                document.getElementById('rewardedCode').value = settings.bitmedia_rewarded_code || '';
+                
+                // مفاتيح API (تظهر بشكل مشفر)
+                document.getElementById('faucetpayKey').value = settings.faucetpay_api_key ? '********' : '';
+                document.getElementById('nowpaymentsKey').value = settings.nowpayments_api_key ? '********' : '';
+                
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+        
+        async function saveAllPrices() {
+            const prices = {
+                video_ad_rate: document.getElementById('videoAdRate').value,
+                smart_link_rate: document.getElementById('smartLinkRate').value,
+                game_click_rate: document.getElementById('gameClickRate').value,
+                task_rate: document.getElementById('taskRate').value,
+                min_withdraw_faucetpay: document.getElementById('minFaucetpay').value,
+                min_withdraw_visa: document.getElementById('minVisa').value,
+                freefire_diamonds: document.getElementById('minFreefire').value,
+                visa_exchange_rate: document.getElementById('visaRate').value,
+                freefire_exchange_rate: document.getElementById('freefireRate').value,
+                smart_link_timer: document.getElementById('smartLinkTimer').value,
+                game_ad_interval: document.getElementById('gameAdInterval').value,
+                referral_percent: document.getElementById('referralPercent').value
+            };
+            
+            try {
+                const response = await fetch('/api/save-settings.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(prices)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('success', '✅ تم حفظ الأسعار بنجاح');
+                } else {
+                    showNotification('error', '❌ فشل في الحفظ');
+                }
+            } catch (error) {
+                showNotification('error', '❌ خطأ في الاتصال');
+            }
+        }
+        
+        async function saveAdCodes() {
+            const codes = {
+                bitmedia_banner_code: document.getElementById('bannerCode').value,
+                bitmedia_video_code: document.getElementById('videoAdCode').value,
+                bitmedia_interstitial_code: document.getElementById('interstitialCode').value,
+                bitmedia_rewarded_code: document.getElementById('rewardedCode').value
+            };
+            
+            try {
+                const response = await fetch('/api/save-ad-codes.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(codes)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('success', '✅ تم حفظ أكواد الإعلانات');
+                } else {
+                    showNotification('error', '❌ فشل في الحفظ');
+                }
+            } catch (error) {
+                showNotification('error', '❌ خطأ في الاتصال');
+            }
+        }
+        
+        async function saveApiKeys() {
+            const keys = {
+                faucetpay_key: document.getElementById('faucetpayKey').value,
+                faucetpay_merchant: document.getElementById('faucetpayMerchant').value,
+                nowpayments_key: document.getElementById('nowpaymentsKey').value,
+                nowpayments_secret: document.getElementById('nowpaymentsSecret').value
+            };
+            
+            try {
+                const response = await fetch('/api/save-api-keys.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(keys)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('success', '✅ تم حفظ مفاتيح API');
+                } else {
+                    showNotification('error', '❌ فشل في الحفظ');
+                }
+            } catch (error) {
+                showNotification('error', '❌ خطأ في الاتصال');
+            }
+        }
+        
+        function showNotification(type, message) {
+            const notification = document.createElement('div');
+            notification.className = `admin-notification ${type}`;
+            notification.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        function logoutAdmin() {
+            document.getElementById('adminLogin').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPass').value = '';
+        }
+    </script>
+</body>
+</html>
