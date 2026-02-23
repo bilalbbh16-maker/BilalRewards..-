@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProfitClick - اربح من النقر والألعاب</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Profit<span>Click</span></h1>
+            </div>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#home" class="active">الرئيسية</a>
+                <a href="#features">المميزات</a>
+                <a href="#how">كيف تعمل</a>
+                <a href="#earn">طرق الربح</a>
+                <a href="#withdraw">السحب</a>
+                <a href="advertiser.html">رفع إعلان</a>
+            </div>
+            
+            <div class="nav-buttons" id="navButtons">
+                <button class="lang-switch" onclick="toggleLanguage()">
+                    <i class="fa-solid fa-language"></i> English
+                </button>
+                <button class="btn-login" onclick="openLoginModal()">
+                    <i class="fa-solid fa-right-to-bracket"></i> دخول
+                </button>
+                <button class="btn-signup" onclick="openSignupModal()">
+                    <i class="fa-solid fa-user-plus"></i> اشتراك
+                </button>
+            </div>
+            
+            <!-- القائمة للموبايل -->
+            <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- القسم الرئيسي -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>اربح المال <span>بأسهل طريقة</span></h1>
+                <p>شاهد إعلانات، العب ألعاب، وانقر روابط ذكية لتربح أرباحًا حقيقية تُسحب لحظة وصولك لأي مبلغ!</p>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3 id="totalUsers">10,000+</h3>
+                        <p>مستخدم نشط</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="totalPaid">$50,000+</h3>
+                        <p>تم الدفع</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="minWithdraw">$0.5</h3>
+                        <p>أدنى سحب</p>
+                    </div>
+                </div>
+                
+                <button class="btn-cta" onclick="scrollToEarn()">
+                    ابدأ الربح الآن <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+            
+            <div class="hero-image">
+                <!-- مكان كود Bitmedia Banner - يتحكم به من لوحة الإدارة -->
+                <div id="bitmedia-banner-top" class="bitmedia-banner">
+                    <!-- أكواد Bitmedia ستُحمّل هنا ديناميكيًا من الإعدادات -->
+                </div>
+                
+                <div class="floating-card earn-card">
+                    <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                    <span id="videoPriceDisplay">0.009$</span>
+                </div>
+                <div class="floating-card game-card">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span id="gamePriceDisplay">0.00006$</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم طرق الربح -->
+    <section id="earn" class="earn-methods">
+        <div class="container">
+            <h2 class="section-title">اختر <span>طريقة ربحك</span></h2>
+            
+            <div class="methods-grid">
+                <!-- بطاقة مشاهدة الإعلانات -->
+                <div class="method-card video-ad">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3>مشاهدة إعلانات فيديو</h3>
+                    <p class="price" id="videoAdPrice">0.009$ لكل إعلان</p>
+                    <p class="desc">شاهد إعلانات فيديو قصيرة واربح فورًا</p>
+                    
+                    <!-- مكان إعلان Bitmedia للفيديو -->
+                    <div id="bitmedia-video-container" class="ad-container">
+                        <!-- إعلان Bitmedia يظهر هنا -->
+                    </div>
+                    
+                    <button class="btn-watch" onclick="watchVideoAd()" id="watchVideoBtn">
+                        <i class="fa-solid fa-play"></i> شاهد الآن
+                    </button>
+                </div>
+
+                <!-- بطاقة الروابط الذكية -->
+                <div class="method-card smart-link">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <h3>الروابط الذكية</h3>
+                    <p class="price" id="smartLinkPrice">0.0009$ لكل نقرة</p>
+                    <p class="desc">انقر على الروابط وانتظر 10 ثوانٍ</p>
+                    
+                    <div class="timer-display" id="link-timer">00:10</div>
+                    
+                    <button class="btn-click" onclick="clickSmartLink()" id="smartLinkBtn">
+                        <i class="fa-solid fa-arrow-pointer"></i> انقر الرابط
+                    </button>
+                </div>
+
+                <!-- بطاقة لعبة الدودة -->
+                <div class="method-card worm-game">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-worm"></i>
+                    </div>
+                    <h3>لعبة الدودة</h3>
+                    <p class="price" id="gamePrice">0.00006$ لكل نقرة</p>
+                    <p class="desc">العب واربح مع كل نقرة! كل 10 نقرات إعلان</p>
+                    
+                    <div class="game-stats-mini">
+                        <span>النقرات: <span id="miniGameClicks">0</span></span>
+                        <span>حتى الإعلان: <span id="miniAdCounter">10</span></span>
+                    </div>
+                    
+                    <button class="btn-play" onclick="window.location.href='game.html'">
+                        <i class="fa-solid fa-gamepad"></i> العب الآن
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم كيفية العمل -->
+    <section id="how" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">كيف <span>تعمل؟</span></h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <i class="fa-solid fa-user-plus"></i>
+                    <h3>إنشاء حساب</h3>
+                    <p>سجل مجانًا خلال ثوانٍ</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <i class="fa-solid fa-eye"></i>
+                    <h3>شاهد أو العب</h3>
+                    <p>اختر طريقة الربح المناسبة لك</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <i class="fa-solid fa-coins"></i>
+                    <h3>اجمع الأرباح</h3>
+                    <p>اربح مع كل نشاط تقوم به</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <h3>اسحب أرباحك</h3>
+                    <p>لـ FaucetPay أو USDT فورًا</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الإحصائيات -->
+    <section class="statistics">
+        <div class="container">
+            <div class="stat-box">
+                <i class="fa-solid fa-users"></i>
+                <h3 id="statUsers">15,234</h3>
+                <p>إجمالي المستخدمين</p>
+            </div>
+            <div class="stat-box">
+                <i class="fa-solid fa-dollar-sign"></i>
+                <h3 id="statEarnings">$75,890</h3>
+                <p>إجمالي الأرباح</p>
+            </div>
+            <div class="stat-box">
+                <i class="fa-solid fa-film"></i>
+                <h3 id="statAds">1.2M</h3>
+                <p>إعلان تمت مشاهدته</p>
+            </div>
+            <div class="stat-box">
+                <i class="fa-solid fa-gamepad"></i>
+                <h3 id="statGames">890K</h3>
+                <p>لعبة تم لعبها</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم السحب -->
+    <section id="withdraw" class="withdraw-section">
+        <div class="container">
+            <h2 class="section-title">طرق <span>السحب</span></h2>
+            
+            <div class="withdraw-methods">
+                <div class="withdraw-card">
+                    <img src="assets/images/faucetpay.png" alt="FaucetPay">
+                    <h3>FaucetPay</h3>
+                    <p>الحد الأدنى: <span id="minFaucetpay">0.5$</span></p>
+                    <p>سحب فوري تلقائي</p>
+                    <button class="btn-withdraw" onclick="window.location.href='withdraw.html'">
+                        سحب <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+                
+                <div class="withdraw-card">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <h3>بطاقة فيزا</h3>
+                    <p>الحد الأدنى: <span id="minVisa">1$</span></p>
+                    <p>1$ = <span id="visaRate">1.10$</span> رصيد</p>
+                    <button class="btn-withdraw" onclick="convertToVisa()">
+                        استبدال <i class="fa-solid fa-exchange-alt"></i>
+                    </button>
+                </div>
+                
+                <div class="withdraw-card">
+                    <i class="fa-solid fa-diamond"></i>
+                    <h3>جواهر فري فاير</h3>
+                    <p>الحد الأدنى: <span id="minFreefire">110</span> جوهرة</p>
+                    <p>110 جوهرة = <span id="freefireRate">1.10$</span></p>
+                    <button class="btn-withdraw" onclick="convertToFreefire()">
+                        استبدال <i class="fa-solid fa-gamepad"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Profit<span>Click</span></h3>
+                    <p>اربح المال بسهولة من منزلك</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <a href="#home">الرئيسية</a>
+                    <a href="#features">المميزات</a>
+                    <a href="#earn">طرق الربح</a>
+                </div>
+                <div class="footer-section">
+                    <h4>الدعم</h4>
+                    <a href="#" onclick="showContact()">اتصل بنا</a>
+                    <a href="#" onclick="showTerms()">الشروط</a>
+                    <a href="#" onclick="showPrivacy()">الخصوصية</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2026 ProfitClick. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- نافذة تسجيل الدخول المنبثقة -->
+    <div id="loginModal" class="modal">
+        <!-- محتوى النافذة من ملف auth.js -->
+    </div>
+
+    <!-- تحميل JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+        // تحميل الإعدادات والأسعار من قاعدة البيانات عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSiteSettings();
+            checkLoginStatus();
+            loadBitmediaAds();
+        });
+        
+        async function loadSiteSettings() {
+            try {
+                const response = await fetch('/api/get-settings.php');
+                const settings = await response.json();
+                
+                // تحديث الأسعار المعروضة
+                document.getElementById('videoAdPrice').textContent = settings.video_ad_rate + '$ لكل إعلان';
+                document.getElementById('videoPriceDisplay').textContent = settings.video_ad_rate + '$';
+                document.getElementById('smartLinkPrice').textContent = settings.smart_link_rate + '$ لكل نقرة';
+                document.getElementById('gamePrice').textContent = settings.game_click_rate + '$ لكل نقرة';
+                document.getElementById('gamePriceDisplay').textContent = settings.game_click_rate + '$';
+                
+                // تحديث حدود السحب
+                document.getElementById('minFaucetpay').textContent = settings.min_withdraw_faucetpay + '$';
+                document.getElementById('minVisa').textContent = settings.min_withdraw_visa + '$';
+                document.getElementById('visaRate').textContent = settings.visa_exchange_rate + '$';
+                document.getElementById('minFreefire').textContent = settings.freefire_diamonds + ' جوهرة';
+                document.getElementById('freefireRate').textContent = settings.freefire_exchange_rate + '$';
+                
+                // تحديث أكواد Bitmedia
+                if (settings.bitmedia_banner_code) {
+                    document.getElementById('bitmedia-banner-top').innerHTML = settings.bitmedia_banner_code;
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+        
+        async function checkLoginStatus() {
+            const user = localStorage.getItem('profitclick_user');
+            if (user) {
+                const userData = JSON.parse(user);
+                updateUIForLoggedUser(userData);
+            }
+        }
+        
+        function updateUIForLoggedUser(user) {
+            const navButtons = document.getElementById('navButtons');
+            navButtons.innerHTML = `
+                <div class="user-menu">
+                    <span class="user-balance" onclick="showBalance()">
+                        <i class="fa-solid fa-wallet"></i> $${user.balance || '0.00'}
+                    </span>
+                    <div class="user-dropdown">
+                        <button class="btn-profile" onclick="window.location.href='dashboard.html'">
+                            <i class="fa-solid fa-user"></i> لوحتي
+                        </button>
+                        <button class="btn-logout" onclick="logout()">
+                            <i class="fa-solid fa-sign-out-alt"></i> خروج
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function logout() {
+            localStorage.removeItem('profitclick_user');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
